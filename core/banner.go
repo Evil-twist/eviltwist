@@ -8,29 +8,34 @@ import (
 )
 
 const (
-	VERSION = "3.8.2"
+	VERSION = "3.8.0"
 )
 
 func putAsciiArt(s string) {
 	for _, c := range s {
 		d := string(c)
 		switch string(c) {
+		case " ":
+			color.Set(color.BgBlack)
+			d = " "
+		case "@":
+			color.Set(color.BgRed)
+			d = " "
 		case "#":
 			color.Set(color.BgRed)
 			d = " "
-		case "@":
-			color.Set(color.BgBlack)
+		case "W":
+			color.Set(color.BgWhite)
 			d = " "
-		case ":":
-			color.Set(color.BgGreen)
+		case "_":
+			color.Unset()
 			d = " "
-		case "$":
-			color.Set(color.BgYellow)
-			d = " "
-		case "/":
-			color.Set(color.BgBlue)
-			d = " "
-		case " ":
+		case "║"
+            color.set(color.BgWhite)
+            d= " "
+        case "═"
+            color.set(color.BgWhite)		
+		case "\n":
 			color.Unset()
 		}
 		fmt.Print(d)
@@ -55,8 +60,8 @@ func printLogo(s string) {
 }
 
 func printUpdateName() {
-	nameClr := color.New(color.FgHiCyan)
-	txt := nameClr.Sprintf("            -- Evil Twist Edition --")
+	nameClr := color.New(color.FgHiWhite)
+	txt := nameClr.Sprintf("               - --  EvilTwist Edition  -- -")
 	fmt.Fprintf(color.Output, "%s", txt)
 }
 
@@ -65,7 +70,7 @@ func printOneliner1() {
 	versionClr := color.New(color.FgGreen)
 	textClr := color.New(color.FgHiBlack)
 	spc := strings.Repeat(" ", 10-len(VERSION))
-	txt := textClr.Sprintf("   Modified by EvilTwist @EVILTWIST ") + handleClr.Sprintf("https://t.me/eviltwist telegram") + spc + textClr.Sprintf("version ") + versionClr.Sprintf("%s", VERSION)
+	txt := textClr.Sprintf("      modified by Jesali Blurry (") + handleClr.Sprintf("@Eviltwist") + textClr.Sprintf(")") + spc + textClr.Sprintf("version ") + versionClr.Sprintf("%s", VERSION)
 	fmt.Fprintf(color.Output, "%s", txt)
 }
 
@@ -73,113 +78,74 @@ func printOneliner2() {
 	textClr := color.New(color.FgHiBlack)
 	red := color.New(color.FgRed)
 	white := color.New(color.FgWhite)
-	txt := textClr.Sprintf("           no ") + red.Sprintf("nginx") + white.Sprintf(" - ") + textClr.Sprintf("pure ") + red.Sprintf("evil")
+	txt := textClr.Sprintf("                   NO ") + red.Sprintf("PEACE") + white.Sprintf(" - ") + textClr.Sprintf("DO ") + red.Sprintf("EVIL")
 	fmt.Fprintf(color.Output, "%s", txt)
 }
 
 func Banner() {
 	fmt.Println()
-	putAsciiArt("                                                                                                  ")
+	putAsciiArt("	                                           "#"                                                 ")	
 	fmt.Println()
-	putAsciiArt("                                            $#####$                                               ")
+	putAsciiArt("                                            "#####"                                               ")
 	fmt.Println()
-	putAsciiArt("                                         /##########/                                             ")
+	putAsciiArt("                                       "##############"                                           ")	
 	fmt.Println()
-	putAsciiArt("                                       $###############$                                          ")
+	putAsciiArt("                                     "###################"                                        ")
 	fmt.Println()
-	putAsciiArt("                                     $###################$                                        ")
+	putAsciiArt("                                   "#######################"                                      ")	
 	fmt.Println()
-	putAsciiArt("                                    /######################/                                      ")
+	putAsciiArt("                                  "##########################"                                    ")	
 	fmt.Println()
-	putAsciiArt("                                   /#########################/                                    ")
+	putAsciiArt("                                 "#############################"                                  ")	
 	fmt.Println()
-	putAsciiArt("                                  /###########################/                                   ")
+	putAsciiArt("                                "###############################"                                 ")	
 	fmt.Println()
-	putAsciiArt("                                 /#########/$:::::::$/#########/                                  ")
+	putAsciiArt("                               "###########"         "###########"                                ")	
 	fmt.Println()
-	putAsciiArt("                                /#######/:::::::::::::::/#######$                                 ")
+	putAsciiArt("                              "#########"               "#########"                               ")	
 	fmt.Println()
-	putAsciiArt("                               $######/:::::::::::::::::::/######$                                ")
+	putAsciiArt("                             "########"                    "########"                             ")	
 	fmt.Println()
-	putAsciiArt("                              /######/::::::::::::::::::::::######/                               ")
+	putAsciiArt("                            "########"    ##         ##     "########"                            ")
+	printLogo(`                   @@@@@@@╗@@╗   @@╗@@╗@@╗  @@@@@@@@╗@@╗    @@╗@@╗@@@@@@@╗@@@@@@@@╗                 `)
 	fmt.Println()
-	putAsciiArt("                              $######$$$$$$$$/$::::::$/$$$$$$$####$                               ")
+	putAsciiArt("                           "########"    ####       ####     "$######"                            ")
+	printLogo(`                   @@╔════╝@@║   @@║@@║@@║  ╚══@@╔══╝@@║    @@║@@║@@╔════╝╚══@@╔══╝                 `)	
 	fmt.Println()
-	putAsciiArt("                              /#####/$$$####/::::::::/####$$$/####/                               ")
+	putAsciiArt("                           "#######"      ##         ##       "#######"                           ")
+    printLogo(`                   @@@@@╗  @@║   @@║@@║@@║     @@║   @@║ @╗ @@║@@║@@@@@@@╗   @@║                    `)	
 	fmt.Println()
-	putAsciiArt("                              /#####:::::/#: :::::::: :#/::::/####/                               ")
+	putAsciiArt("                           "#######"                           "######"                           ")
+	printLogo(`                   @@╔══╝  ╚@@╗ @@╔╝@@║@@║     @@║   @@║@@@╗@@║@@║╚════@@║   @@║                    `)
 	fmt.Println()
-	putAsciiArt("                              /####/::::::::::::::::::::::::://###/                               ")
+	putAsciiArt("                            "######"                            "#####"                           ")
+	printLogo(`                   @@@@@@@╗ ╚@@@@╔╝ @@║@@@@@@@╗@@║   ╚@@@╔@@@╔╝@@║@@@@@@@║   @@║                    `)
 	fmt.Println()
-	putAsciiArt("                              /####/:::::::::::::::::::::::::////#$                               ")
+	putAsciiArt("                            "######"        ww        ww         "######"                          ")
+	printLogo(`                   ╚══════╝  ╚═══╝  ╚═╝╚══════╝╚═╝    ╚══╝╚══╝ ╚═╝╚══════╝   ╚═╝                    `)
 	fmt.Println()
-	putAsciiArt("                              $###//$:::::::::::::::::::::::$/####                                ")
+	putAsciiArt("                            "######"          wwwwwwwwww         "#####"                          ")	
 	fmt.Println()
-	putAsciiArt("                               $####/$::::::::::::::::::::::$/###$                                ")
+	putAsciiArt("                             "######"           wwwww           "#####"                           ")	
 	fmt.Println()
-	putAsciiArt("                                /###//$:::::::::::::::::::$///##/                                 ")
+	putAsciiArt("                              "#####"                           "####"                            ")	
 	fmt.Println()
-	putAsciiArt("                              /#######//::::::::::::::::://///#/                                  ")
+	putAsciiArt("                            "########"                         "####"                             ")	
 	fmt.Println()
-	putAsciiArt("                            /##########///::::::::::::://////####$                                ")
+	putAsciiArt("                          "############"                      "#######"                           ")	
 	fmt.Println()
-	putAsciiArt("                         /###############/////::::::///    //########/                            ")
+	putAsciiArt("                       "#################"                  "############"                        ")	
 	fmt.Println()
-	putAsciiArt("                        /#################  $/######/$    /############/                          ")
+	putAsciiArt("                      "######################"@EVILTWIST"##################"                      ")	
 	fmt.Println()
-	putAsciiArt("                       /##################  #########$   /##############/                         ")
+	putAsciiArt("                     "#######################################################"                    ")	
 	fmt.Println()
-	putAsciiArt("                      /###################  #########   /################                         ")
-	fmt.Println()
-	putAsciiArt("                      ####################  ########   /#################/                        ")
-	fmt.Println()
-	putAsciiArt("                     /#####################  ########$ /##################                        ")
-	fmt.Println()
-	putAsciiArt("                     /######################/########$$  /################/                       ")
-	fmt.Println()
-	putAsciiArt("                     ######################$$##########    /###############                       ")
-	fmt.Println()
-	putAsciiArt("                    /####################################### /#############/                      ")
-	fmt.Println()
-	putAsciiArt("                    /########################################//#############                      ")
-	fmt.Println()
-	putAsciiArt("                    ########################################################/                     ")
-	fmt.Println()
-	putAsciiArt("                    ######//////////////////////////////////////////////////#                     ")
-	fmt.Println()
-	putAsciiArt("                    #####/                                                   /                    ")
-	fmt.Println()
-	putAsciiArt("                    /#####/                      .;'                         /#                    ")
-	fmt.Println()
-	putAsciiArt("                    #####$/               .'`  `-'  ``.                     /$#                    ")
-	fmt.Println()
-	putAsciiArt("                    #####/               ; EVILTTWIST ;                     /#                     ")
-	fmt.Println()
-	putAsciiArt("                    /#####/                `.__.-.__;                      /$                     ")
-	fmt.Println()
-	putAsciiArt("                     /####/                                              /$/                     ")
-	fmt.Println()
-	putAsciiArt("                       /###/                                                                      ")
-	fmt.Println()
-	putAsciiArt("                          /$/                                                                     ")
-	fmt.Println()
-	printLogo(`  ███████╗██╗   ██╗██╗██╗  ████████╗██╗    ██╗██╗███████╗████████╗         ██╗██╗███╗   ██╗██╗  ██╗`)
-    fmt.Println()██╔════╝██║   ██║██║██║  ╚══██╔══╝██║    ██║██║██╔════╝╚══██╔══╝         ██║██║████╗  ██║╚██╗██╔╝`)
-    printLogo(`  █████╗  ██║   ██║██║██║     ██║   ██║ █╗ ██║██║███████╗   ██║            ██║██║██╔██╗ ██║ ╚███╔╝ `)
-    fmt.Println()██╔══╝  ╚██╗ ██╔╝██║██║     ██║   ██║███╗██║██║╚════██║   ██║       ██   ██║██║██║╚██╗██║ ██╔██╗ `)
-    printLogo(`  ███████╗ ╚████╔╝ ██║███████╗██║   ╚███╔███╔╝██║███████║   ██║       ╚█████╔╝██║██║ ╚████║██╔╝ ██╗`)
-    fmt.Println()╚══════╝  ╚═══╝  ╚═╝╚══════╝╚═╝    ╚══╝╚══╝ ╚═╝╚══════╝   ╚═╝        ╚════╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝`)
-    printLogo(`  Evilginx to telegram bot modified by Blurry(@Eviltwist)`)
-    fmt.Println()
-    printUpdateName()                                                                                                
-    fmt.Println()
+	putAsciiArt("                    "#########################################################"                   ")	
+	//printOneliner2()
+	//fmt.Println()
+	putAsciiArt("                   "############################################################"                 ")
 	printOneliner1()
 	fmt.Println()
-	printOneliner2()
+	putAsciiArt("                  "##############################################################"                ")
 	fmt.Println()
-	fmt.Println()
-}
-
-func main() {
-	Banner()
 }
