@@ -93,7 +93,7 @@ func (t *Terminal) DoWork() {
 	for !do_quit {
 		line, err := t.rl.Readline()
 		if err == readline.ErrInterrupt {
-			log.Info("type 'exit' in order to quit")
+			log.Info("type 'exit' or 'bye'  in order to quit")
 			continue
 		} else if err == io.EOF {
 			break
@@ -165,7 +165,7 @@ func (t *Terminal) DoWork() {
 			} else {
 				t.hlp.Print(0)
 			}
-		case "q", "quit", "exit":
+		case "q", "quit", "exit", "bye":
 			do_quit = true
 			cmd_ok = true
 		default:
@@ -251,9 +251,9 @@ func (t *Terminal) handleConfig(args []string) error {
 				t.p.gophish.Setup(t.cfg.GetGoPhishAdminUrl(), t.cfg.GetGoPhishApiKey(), t.cfg.GetGoPhishInsecureTLS())
 				err := t.p.gophish.Test()
 				if err != nil {
-					log.Error("Itwizardo: %s", err)
+					log.Error("Eviltwist: %s", err)
 				} else {
-					log.Success("Itwizardo: connection was successful go and try it brother !")
+					log.Success("Eviltwist: connection was successful go and try it brother !")
 				}
 				return nil
 			}
