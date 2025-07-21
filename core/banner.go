@@ -71,7 +71,7 @@ func printOneliner1() {
 	versionClr := color.New(color.FgMagenta)
 	textClr := color.New(color.FgHiBlack)
 	spc := strings.Repeat(" ", 10-len(VERSION))
-	txt := textClr.Sprintf("      modified by Jesali Blurry (") + handleClr.Sprintf("@Eviltwist") + textClr.Sprintf(")") + spc + textClr.Sprintf("version ") + versionClr.Sprintf("%s", VERSION)
+	txt := textClr.Sprintf("      modified by Young Boss (") + handleClr.Sprintf("@Eviltwist") + textClr.Sprintf(")") + spc + textClr.Sprintf("version ") + versionClr.Sprintf("%s", VERSION)
 	fmt.Fprintf(color.Output, "%s", txt)
 }
 
