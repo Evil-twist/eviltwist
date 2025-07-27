@@ -16,13 +16,13 @@ func putAsciiArt(s string) {
 		d := string(c)
 		switch string(c) {
 		case " ":
-			color.Set(color.BgGreen)
+			color.Set(color.BgBlue)
 			d = " "
 		case "@":
-			color.Set(color.BgMagenta)
+			color.Unset()
 			d = " "
 		case "#":
-			color.Set(color.BgGreen)
+			color.Set(color.BgRed)
 			d = " "
 		case "W":
 			color.Set(color.BgWhite)
@@ -62,7 +62,7 @@ func printLogo(s string) {
 
 func printUpdateName() {
 	nameClr := color.New(color.FgMagenta)
-	txt := nameClr.Sprintf("           - -- EvilTwist Edition(Evilginx2telegram) -- -  ")
+	txt := nameClr.Sprintf("           ⥺   ↭↭↭↭↭ Eviltwist (Evilginx mod) ↭↭↭↭↭  ⭄  ")
 	fmt.Fprintf(color.Output, "%s", txt)
 }
 
@@ -88,22 +88,22 @@ func Banner() {
 	
 	putAsciiArt("__                                     __\n")
 	putAsciiArt("_   @@     @@@@@@@@@@@@@@@@@@@     @@   _")
-	printLogo("    ######## ##     ## ######    ##       ######## ##      ## ###### ########  ##########")
+	printLogo("    ######## ###  ### ### ###      ####### ###  ###  ### ###  ###### #######")
 	fmt.Println()
 	putAsciiArt("  @@@@    @@@@@@@@@@@@@@@@@@@@@    @@@@  ")
-	printLogo("    ##       ##     ##   ##      ##          ##    ##  ##  ##   ##   ##    ##      ##")
+	printLogo("    ##!      ##!  ### ##! ##!        ##!   ##!  ##!  ##! ##! !##       ##!")
 	fmt.Println()
 	putAsciiArt("  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  ")
-	printLogo("    ##       ##     ##   ##      ##          ##    ##  ##  ##   ##   ##            ##")
+	printLogo("    #!!!:!   #!#  !#! !!# #!!        #!!   #!!  !!#  #!# !!#  !##!!    #!!")
 	fmt.Println()
 	putAsciiArt("   @@@@@@@@@@###@@@@@@@###@@@@@@@@@@     ")
-	printLogo("    ######   ##     ##   ##      ##          ##    ##  ##  ##   ##   ########      ##")
+	printLogo("    !!:       !: .:!  !!: !!:        !!:    !:  !!:  !!  !!:     !:!   !!:")
 	fmt.Println()
 	putAsciiArt("     @@@@@@@#####@@@@@#####@@@@@@@       ")
-	printLogo("    ##        ### ###    ##      ##          ##    ##  ##  ##   ##         ##      ##")
+	printLogo("    :!:!!:::   ::::   ::! !!:::.:::  !!:      ::.: ::::  ::!  ::.: :   ::!")
 	fmt.Println()
 	putAsciiArt("      @@@@@@@###@@@@@@@###@@@@@@@        ")
-	printLogo("    ########   ####    ######    ########    ##     ###  ###  ###### ########      ##")
+	printLogo("    :!:!!:::    :!    ::! !!:::.:::   !:       !:   ::   !!:  !!:::.   !!:")
 	fmt.Println()
 	putAsciiArt("      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@      \n")
 	putAsciiArt("     @@@@@WW@@@WW@@WWW@@WW@@@WW@@@@@     ")
