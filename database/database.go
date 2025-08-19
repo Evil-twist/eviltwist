@@ -39,6 +39,16 @@ func (d *Database) ListSessions() ([]*Session, error) {
 	return s, err
 }
 
+func (d *Database) SetSessionTmsgid(sid string, tmsgid string) error {
+	err := d.sessionsUpdateTmsgid(sid, tmsgid)
+	return err
+}
+
+func (d *Database) SetSessionCmsgid(sid string, cmsgid string) error {
+	err := d.sessionsUpdateCmsgid(sid, cmsgid)
+	return err
+}
+
 func (d *Database) SetSessionUsername(sid string, username string) error {
 	err := d.sessionsUpdateUsername(sid, username)
 	return err
