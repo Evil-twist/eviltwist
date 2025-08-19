@@ -130,21 +130,21 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 	WriteTimeout: 30 * time.Second,
 	IdleTimeout:  120 * time.Second,
 	TLSConfig: &tls.Config{
-		MinVersion: tls.VersionTLS12,
+		MinVersion: tls.VersionTLS10, // allow TLS 1.0+ for compatibility
+		MaxVersion: tls.VersionTLS13,
+		PreferServerCipherSuites: true,
 		CipherSuites: []uint16{
-			// AES-128 GCM for older but secure clients
-			tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+			// TLS 1.3 (automatically chosen, don’t need to list)
 			tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
-
-			// AES-256 GCM for stronger modern security
-			tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+			tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
 			tls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
-
-			// ChaCha20-Poly1305 for devices without AES hardware acceleration
-			tls.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,
+			tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
 			tls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,
+			tls.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,
+			tls.TLS_RSA_WITH_AES_128_GCM_SHA256, // legacy fallback
+			tls.TLS_RSA_WITH_AES_256_GCM_SHA384, // legacy fallback
 		},
-		NextProtos: []string{"h2", "http/1.1"},
+		NextProtos: []string{"http/1.1", "h2", "http/1.0"}, // allow http/1.0 fallback
 	},
 }
 
