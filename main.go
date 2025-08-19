@@ -42,7 +42,7 @@ func showAd() {
 	lred := color.New(color.FgHiRed)
 	lyellow := color.New(color.FgHiYellow)
 	white := color.New(color.FgHiWhite)
-	message := fmt.Sprintf("%s: %s %s", lred.Sprint("Telegram Username & Channel"), lyellow.Sprint("https://t.me/eviltwist/"), white.Sprint("(https://t.me/Get_it_or_leave_it)"))
+	message := fmt.Sprintf("%s: %s %s", lred.Sprint("Telegram Usernames"), lyellow.Sprint("https://t.me/eviltwist/"), white.Sprint("(Store: clirpa.com)"))
 	log.Info("%s", message)
 }
 
@@ -153,7 +153,7 @@ func main() {
 	}
 
 	phishlets_path := *phishlets_dir
-	log.Info("loading phishlets from: %s", phishlets_path)
+	log.Info("Phishlets loaded from: %s", phishlets_path)
 
 	if *cfg_dir == "" {
 		usr, err := user.Current()
@@ -165,7 +165,7 @@ func main() {
 	}
 
 	config_path := *cfg_dir
-	log.Info("loading configuration from: %s", config_path)
+	log.Info("Configuration loaded from: %s", config_path)
 
 	err := os.MkdirAll(*cfg_dir, os.FileMode(0700))
 	if err != nil {
