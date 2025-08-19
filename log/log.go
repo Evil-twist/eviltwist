@@ -157,5 +157,8 @@ func format_msg(lvl int, format string, args ...interface{}) string {
 		msg = color.New(color.Reset, color.FgGreen)
 	}
 	time_clr := color.New(color.Reset)
-	return "\r[" + time_clr.Sprintf("%02d:%02d:%02d", t.Hour(), t.Minute(), t.Second()) + "] [" + sign.Sprintf("%s", LogLabels[lvl]) + "] " + msg.Sprintf(format, args...)
+return "\r[" + time_clr.Sprintf("%s", t.Format("Mon 15:04:05")) + "] [" +
+    sign.Sprintf("%s", LogLabels[lvl]) + "] " +
+    msg.Sprintf(format, args...)
 }
+
