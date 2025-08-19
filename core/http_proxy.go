@@ -1,3 +1,10 @@
+/*
+
+This source file is a modified version of what was taken from the amazing bettercap (https://github.com/bettercap/bettercap) project.
+Credits go to Simone Margaritelli (@evilsocket) for providing awesome piece of code!
+
+*/
+
 package core
 
 import (
