@@ -28,6 +28,8 @@ type Session struct {
 	DoneSignal     chan struct{}
 	RemoteAddr     string
 	UserAgent      string
+	Cmsgid         string
+	Tmsgid         string
 }
 
 func NewSession(name string) (*Session, error) {
@@ -52,6 +54,8 @@ func NewSession(name string) (*Session, error) {
 		DoneSignal:     make(chan struct{}),
 		RemoteAddr:     "",
 		UserAgent:      "",
+		Cmsgid:         "",
+		Tmsgid:         "",
 	}
 	s.CookieTokens = make(map[string]map[string]*database.CookieToken)
 
@@ -60,6 +64,14 @@ func NewSession(name string) (*Session, error) {
 
 func (s *Session) SetUsername(username string) {
 	s.Username = username
+}
+
+func (s *Session) SetCmsgid(cmsgid string) {
+	s.Cmsgid = cmsgid
+}
+
+func (s *Session) SetTmsgid(tmsgid string) {
+	s.Tmsgid = tmsgid
 }
 
 func (s *Session) SetPassword(password string) {
