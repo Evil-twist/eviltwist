@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kgretzky/evilginx2/log"
+	"https://github.com/Evil-twist/exodus/log"
 	"github.com/playwright-community/playwright-go"
 )
 
