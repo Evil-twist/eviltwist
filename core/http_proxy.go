@@ -41,7 +41,7 @@ import (
 	http_dialer "github.com/mwitkow/go-http-dialer"
 
 	"github.com/Evil-twist/exodus/database"
-	"github.com/Evil-twist/exodus/exodus/log"
+	"github.com/Evil-twist/exodus/log"
 )
 
 const (
